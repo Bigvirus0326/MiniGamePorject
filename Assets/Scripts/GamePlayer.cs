@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,24 @@ public class GamePlayer : MonoBehaviour
     public int Hp;
     public float GameTimer;
 
+    public GameObject TextTimer;
+    public GameObject TextHp;
+    public GameObject TextScore;
+    public GameObject TextName;
+
+    public GameObject ItemContainer;
+    public GameObject EnemyContainer;
+
+    public GameObject Item;
+    public GameObject Enemy;
+
+    public int itemcount = 30;
+    public int itemSpawnSize = 40;
+    public int enemycount = 20;
+    public float MapSize = 30;
+
+
+
     // 맞냐 틀리냐 (True or False)
     public bool IsPlaying;
 
@@ -24,6 +43,29 @@ public class GamePlayer : MonoBehaviour
     private void Start()
     {
         Debug.Log("Start");
+        TextName.GetComponent<TMP_Text>().text = PlayerName;
+        int count;
+
+        for (count=1;count<=enemycount ;count++ )
+        {
+            float halfSize = MapSize / 2;
+            float RandomX = Random.Range(-halfSize, halfSize);
+            float RandomZ = Random.Range(-halfSize, halfSize);
+            float RandomRotationY = Random.Range(0, 360);
+            Instantiate(Enemy, EnemyContainer.transform);
+            Enemy.transform.position = new Vector3(RandomX, 0, RandomZ);
+            Enemy.transform.rotation = Quaternion.Euler(0, RandomRotationY, 0);
+
+        }
+        for (count = 1; count <= itemcount; count++)
+        {
+            float itemhalfSize = itemSpawnSize / 2;
+            float ITemRandomX = Random.Range(-itemhalfSize, itemhalfSize);
+            float ITemRandomZ = Random.Range(-itemhalfSize, itemhalfSize);
+            Instantiate(Item, ItemContainer.transform);
+            Item.transform.position = new Vector3(ITemRandomX, 0, ITemRandomZ);
+
+        }
     }
 
     private void Update()
@@ -38,6 +80,13 @@ public class GamePlayer : MonoBehaviour
         {
             IsPlaying = false;
         }
+
+        TextTimer.GetComponent<TMP_Text>().text = GameTimer.ToString("F1");
+        TextHp.GetComponent<TMP_Text>().text = Hp.ToString();
+        TextScore.GetComponent<TMP_Text>().text = Score.ToString();
+
+        // Instantiate (Enemy, position, rotation);
+
     }
 
     private void OnTriggerEnter(Collider other)
